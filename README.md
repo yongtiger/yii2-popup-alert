@@ -1,6 +1,6 @@
-# yii2-popup-alert release version 1.0.0
+# yii2-popup-alert release version 1.1.0 (fontawesome)
 
-Alert widget renders a message from session flash with `BootstrapDialog`. All flash messages are displayed in the sequence they were assigned using setFlash.
+Alert widget renders a message from session flash with `BootstrapDialog` and fontawesome icons. All flash messages are displayed in the sequence they were assigned using setFlash.
 
 [![Latest Stable Version](https://poser.pugx.org/yongtiger/yii2-popup-alert/v/stable)](https://packagist.org/packages/yongtiger/yii2-popup-alert)
 [![Total Downloads](https://poser.pugx.org/yongtiger/yii2-popup-alert/downloads)](https://packagist.org/packages/yongtiger/yii2-popup-alert) 
@@ -11,11 +11,13 @@ Alert widget renders a message from session flash with `BootstrapDialog`. All fl
 ## FEATURES
 
 * BootstrapDialog
+* fontawesome icons
 
 
 ## DEPENDENCES
 
 * "mdscomp/yii2-bootstrap-dialog": "~1.0"
+* "rmrevin/yii2-fontawesome": "~2.9"
 
 
 ## INSTALLATION   

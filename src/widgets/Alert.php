@@ -14,9 +14,10 @@ namespace yongtiger\popupalert\widgets;
 
 use yii\bootstrap\Widget;
 use mdscomp\BootstrapDialog\assets\BootstrapDialogAssets;
+use rmrevin\yii\fontawesome\AssetBundle;    ///[yii2-popup-alert 1.1.0 (fontawesome)]
 
 /**
- * Alert widget renders a message from session flash with `BootstrapDialog`. All flash messages are displayed
+ * Alert widget renders a message from session flash with `BootstrapDialog` and fontawesome icons. All flash messages are displayed
  * in the sequence they were assigned using setFlash. You can set message as following:
  *
  * ```php
@@ -34,6 +35,20 @@ use mdscomp\BootstrapDialog\assets\BootstrapDialogAssets;
  */
 class Alert extends Widget
 {
+    ///[yii2-popup-alert 1.1.0 (fontawesome)]
+    /**
+     * @var array the fontawesome icon types configuration for the flash titles or messages.
+     */
+    public $iconTypes = [
+        'default' => '<i class="icon fa fa-info"></i>',
+        'info' => '<i class="icon fa fa-info"></i>',
+        'primary' => '<i class="icon fa fa-info-circle"></i>',
+        'success' => '<i class="icon fa fa-check"></i>',
+        'warning' => '<i class="icon fa fa-warning"></i>',
+        'danger' => '<i class="icon fa fa-exclamation"></i>',
+        'error' => '<i class="icon fa fa-times-circle"></i>',
+    ];
+
     /**
      * @var [type]
      */
@@ -93,9 +108,23 @@ class Alert extends Widget
                     $view->registerJs("
                         var dialogShow = BootstrapDialog.show({
                             type:" . $this->popupTypes[$type] . ",
-                            title:'" . $this->title . "',
-                            message:'" . $message . "',
                             size:" . $this->sizeTypes[$this->size] . ",
+                            cssClass: '',
+                            title:'" . $this->iconTypes[$type] . " " . $this->title . "',
+                            message:'" . $message . "',
+                            nl2br: true,
+                            closable: true,
+                            closeByBackdrop: true,
+                            closeByKeyboard: true,
+                            closeIcon: '&#215;',
+                            spinicon: BootstrapDialog.ICON_SPINNER,
+                            autodestroy: true,
+                            draggable: false,
+                            animate: true,
+                            description: '',
+                            tabindex: -1,
+                            btnsOrder: BootstrapDialog.BUTTONS_ORDER_CANCEL_OK,
+
                             buttons:[
                                 {
                                     label: 'Close',
@@ -128,5 +157,6 @@ class Alert extends Widget
     public function registerClientScript()
     {
         BootstrapDialogAssets::register($this->view);
+        AssetBundle::register($this->view); ///[yii2-popup-alert 1.1.0 (fontawesome)]
     }
 }

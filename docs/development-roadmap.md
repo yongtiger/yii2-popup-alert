@@ -1,5 +1,12 @@
 # Development roadmap
 
+## release version 1.1.0 (fontawesome)
+
+Features of this version:
+
+* fontawesome icons
+
+
 ## release version 1.0.0
 
 
