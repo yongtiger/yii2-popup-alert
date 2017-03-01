@@ -1,0 +1,30 @@
+{
+    "name": "yongtiger/yii2-popup-alert",
+    "description": "",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","popup","alert","widgets"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/yongtiger/yii2-popup-alert/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "source": "https://github.com/yongtiger/yii2-popup-alert"
+    },
+    "authors": [
+        {
+            "name": "Yong Tiger",
+            "email": "tigeryang.brainbook@outlook.com",
+            "homepage": "http://www.branbook.cc/yongtiger"
+        }
+    ],
+    "homepage" : "http://www.branbook.cc",
+    "require": {
+        "php": ">=5.5",
+        "yiisoft/yii2": "2.*",
+        "yiisoft/yii2-bootstrap": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "yongtiger\\popupalert\\": "src"
+        }
+    }
+}
