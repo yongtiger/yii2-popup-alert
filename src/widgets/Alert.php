@@ -13,9 +13,10 @@
 namespace yongtiger\popupalert\widgets;
 
 use yii\bootstrap\Widget;
+use mdscomp\BootstrapDialog\assets\BootstrapDialogAssets;
 
 /**
- * Alert widget renders a message from session flash for AdminLTE alerts. All flash messages are displayed
+ * Alert widget renders a message from session flash with BootstrapDialog and fontawesome icons. All flash messages are displayed
  * in the sequence they were assigned using setFlash. You can set message as following:
  *
  * ```php
@@ -28,83 +29,104 @@ use yii\bootstrap\Widget;
  * \Yii::$app->getSession()->setFlash('error', ['Error 1', 'Error 2']);
  * ```
  *
+ * @see https://bitbucket.org/mzdani/yii2-bootstrap-dialog/wiki/Usage
  * @package yongtiger\popupalert\widgets
  */
-class Alert extends Widget
+class Alert extends \yii\bootstrap\Widget
 {
     /**
-     * @var array the alert types configuration for the flash messages.
-     * This array is setup as $key => $value, where:
-     * - $key is the name of the session flash variable
-     * - $value is the array:
-     *       - class of alert type (i.e. danger, success, info, warning)
-     *       - icon for alert AdminLTE
+     * @var [type]
      */
-    public $alertTypes = [
-        'error' => [
-            'class' => 'alert-danger',
-            'icon' => '<i class="icon fa fa-ban"></i>',
-        ],
-        'danger' => [
-            'class' => 'alert-danger',
-            'icon' => '<i class="icon fa fa-ban"></i>',
-        ],
-        'success' => [
-            'class' => 'alert-success',
-            'icon' => '<i class="icon fa fa-check"></i>',
-        ],
-        'info' => [
-            'class' => 'alert-info',
-            'icon' => '<i class="icon fa fa-info"></i>',
-        ],
-        'warning' => [
-            'class' => 'alert-warning',
-            'icon' => '<i class="icon fa fa-warning"></i>',
-        ],
+    public $popupTypes = [
+        'default'   => 'BootstrapDialog.TYPE_DEFAULT',
+        'info'  => 'BootstrapDialog.TYPE_INFO',
+        'primary' => 'BootstrapDialog.TYPE_PRIMARY',
+        'success'    => 'BootstrapDialog.TYPE_SUCCESS',
+        'warning' => 'BootstrapDialog.TYPE_WARNING',
+        'danger' => 'BootstrapDialog.TYPE_DANGER',
+        'error' => 'BootstrapDialog.TYPE_DANGER'
     ];
 
     /**
-     * @var array the options for rendering the close button tag.
+     * @var [type]
      */
-    public $closeButton = [];
+    public $sizeTypes=[
+        'nomal'=>'BootstrapDialog.SIZE_NORMAL',
+        'small'=>'BootstrapDialog.SIZE_SMALL',
+        'wide'=>'BootstrapDialog.SIZE_WIDE',
+        'large'=>'BootstrapDialog.SIZE_LARGE'
 
+    ];
 
     /**
-     * @var boolean whether to removed flash messages during AJAX requests
+     * @var [type]
      */
-    public $isAjaxRemoveFlash = true;
-    
+    public $title;
+
     /**
-     * Initializes the widget.
-     * This method will register the bootstrap asset bundle. If you override this method,
-     * make sure you call the parent implementation first.
+     * @var [type]
      */
-    public function init()
-    {
+    public $size;
+
+    /**
+     * @inheritdoc
+     */
+    public function init() {
+
         parent::init();
 
-        $session = \Yii::$app->getSession();
+        $this->registerClientScript();
+
+        if ($this->size === null || !isset($this->sizeTypes[$this->size])){
+            $this->size = 'small';
+        }
+
+        $session = \Yii::$app->session;
         $flashes = $session->getAllFlashes();
-        $appendCss = isset($this->options['class']) ? ' ' . $this->options['class'] : '';
+
+        $view = $this->getView();
 
         foreach ($flashes as $type => $data) {
-            if (isset($this->alertTypes[$type])) {
+            if (isset($this->popupTypes[$type])) {
                 $data = (array) $data;
                 foreach ($data as $message) {
+                    $view->registerJs("
+                        var dialogShow = BootstrapDialog.show({
+                            type:" . $this->popupTypes[$type] . ",
+                            title:'" . $this->title . "',
+                            message:'" . $message . "',
+                            size:" . $this->sizeTypes[$this->size] . ",
+                            buttons:[
+                                {
+                                    label: 'Close',
+                                    action: function(dialogItself){
+                                        dialogItself.close();
+                                    }
+                                }
+                            ]
+                        });
+                    ");
 
-                    $this->options['class'] = $this->alertTypes[$type]['class'] . $appendCss;
-                    $this->options['id'] = $this->getId() . '-' . $type;
+                    // If `$type` is `success`, automatically closed after 3s.
+                   if($type == 'success'){
+                        $view->registerJs("
+                            setTimeout(function(){ dialogShow.close() }, 3000);
+                        ");
+                   }
+                }
 
-                    echo \yii\bootstrap\Alert::widget([
-                        'body' => $this->alertTypes[$type]['icon'] . $message,
-                        'closeButton' => $this->closeButton,
-                        'options' => $this->options,
-                    ]);
-                }
-                if ($this->isAjaxRemoveFlash && !\Yii::$app->request->isAjax) {
-                    $session->removeFlash($type);
-                }
+                $session->removeFlash($type);
             }
         }
+    }
+
+    /**
+     * Registers necessary JavaScript.
+     *
+     * @return yii\web\AssetBundle the registered asset bundle instance
+     */
+    public function registerClientScript()
+    {
+        BootstrapDialogAssets::register($this->view);
     }
 }
