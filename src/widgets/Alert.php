@@ -16,7 +16,7 @@ use yii\bootstrap\Widget;
 use mdscomp\BootstrapDialog\assets\BootstrapDialogAssets;
 
 /**
- * Alert widget renders a message from session flash with BootstrapDialog and fontawesome icons. All flash messages are displayed
+ * Alert widget renders a message from session flash with `BootstrapDialog`. All flash messages are displayed
  * in the sequence they were assigned using setFlash. You can set message as following:
  *
  * ```php
@@ -32,7 +32,7 @@ use mdscomp\BootstrapDialog\assets\BootstrapDialogAssets;
  * @see https://bitbucket.org/mzdani/yii2-bootstrap-dialog/wiki/Usage
  * @package yongtiger\popupalert\widgets
  */
-class Alert extends \yii\bootstrap\Widget
+class Alert extends Widget
 {
     /**
      * @var [type]
