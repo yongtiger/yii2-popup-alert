@@ -1,5 +1,8 @@
 # Development roadmap
 
+## release version 1.1.1:FIX# multiple BootstrapDialog
+
+
 ## release version 1.1.0 (fontawesome)
 
 Features of this version:

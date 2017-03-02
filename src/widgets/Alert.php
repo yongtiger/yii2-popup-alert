@@ -104,7 +104,7 @@ class Alert extends Widget
         foreach ($flashes as $type => $data) {
             if (isset($this->popupTypes[$type])) {
                 $data = (array) $data;
-                foreach ($data as $message) {
+                foreach ($data as $i => $message) {
                     $view->registerJs("
                         var dialogShow = BootstrapDialog.show({
                             type:" . $this->popupTypes[$type] . ",
@@ -119,10 +119,10 @@ class Alert extends Widget
                             closeIcon: '&#215;',
                             spinicon: BootstrapDialog.ICON_SPINNER,
                             autodestroy: true,
-                            draggable: false,
+                            draggable: true,
                             animate: true,
                             description: '',
-                            tabindex: -1,
+                            tabindex: $i,
                             btnsOrder: BootstrapDialog.BUTTONS_ORDER_CANCEL_OK,
 
                             buttons:[
@@ -132,16 +132,22 @@ class Alert extends Widget
                                         dialogItself.close();
                                     }
                                 }
-                            ]
+                            ],
+
+                            onshown: function (dialog) {
+                                ///[yii2-popup-alert release version 1.1.1:FIX# multiple BootstrapDialog]
+                                // dialog.getModal()[0].style.cssText += 'padding-top:" . $i * 50 . "px; padding-left:" . $i * 100 . "px;';
+                                dialog.getModal()[0].style.zIndex = 99999 - $i;
+                                dialog.getModal()[0].style.top = '" . $i * 50 . "px';
+                                dialog.getModal()[0].style.left = '" . $i * 100 . "px';
+
+                                // If dialog type is `type-success`, automatically closed after 3s.
+                                if(dialog.options.type == BootstrapDialog.TYPE_SUCCESS){
+                                    setTimeout(function(){ dialog.close() }, ($i + 1) * 3000);
+                                }
+                            }
                         });
                     ");
-
-                    // If `$type` is `success`, automatically closed after 3s.
-                   if($type == 'success'){
-                        $view->registerJs("
-                            setTimeout(function(){ dialogShow.close() }, 3000);
-                        ");
-                   }
                 }
 
                 $session->removeFlash($type);

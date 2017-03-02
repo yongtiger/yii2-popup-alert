@@ -1,4 +1,4 @@
-# yii2-popup-alert release version 1.1.0 (fontawesome)
+# yii2-popup-alert release version 1.1.1:FIX# multiple BootstrapDialog
 
 Alert widget renders a message from session flash with `BootstrapDialog` and fontawesome icons. All flash messages are displayed in the sequence they were assigned using setFlash.
 
